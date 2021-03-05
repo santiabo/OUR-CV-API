@@ -7,13 +7,13 @@ server.post("/:id", async (req, res, next) => {
 
   try {
     const { position, place, date, info } = req.body;
-    const userId = req.params.id;
+    const curriculumId = req.params.id;
     const result = await Experience.create({
       position,
       place,
       date,
       info,
-      userId
+      curriculumId
     });
     res.status(201).json(result);
   } catch (error) {

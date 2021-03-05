@@ -51,27 +51,31 @@ let entries = Object.entries(sequelize.models);
 let capsEntries = entries.map((entry) => [entry[0][0].toUpperCase() + entry[0].slice(1), entry[1]]);
 sequelize.models = Object.fromEntries(capsEntries);
 
-const { User, Education, Experience, Passion, Skill, Summary } = sequelize.models;
+const { User, Education, Experience, Passion, Skill, Summary, Curriculum } = sequelize.models;
 // En sequelize.models están todos los modelos importados como propiedades
 // Para relacionarlos hacemos un destructuring
 /* const { User } = sequelize.models; */
 
 // Aca vendrian las relaciones
 // Product.hasMany(Reviews);
-User.hasMany(Education);
-Education.belongsTo(User);
 
-User.hasMany(Experience);
-Experience.belongsTo(User);
+User.hasMany(Curriculum);
+Curriculum.belongsTo(User);
 
-User.hasMany(Passion);
-Passion.belongsTo(User);
+Curriculum.hasMany(Education);
+Education.belongsTo(Curriculum);
 
-User.hasMany(Skill);
-Skill.belongsTo(User);
+Curriculum.hasMany(Experience);
+Experience.belongsTo(Curriculum);
 
-User.hasOne(Summary);
-Summary.belongsTo(User);
+Curriculum.hasMany(Passion);
+Passion.belongsTo(Curriculum);
+
+Curriculum.hasMany(Skill);
+Skill.belongsTo(Curriculum);
+
+Curriculum.hasOne(Summary);
+Summary.belongsTo(Curriculum);
 
 //Con esta relacion se crea la tabla intermedia contactLists
 
@@ -85,6 +89,7 @@ module.exports = {
   Experience,
   Passion,
   Skill,
-  Summary
+  Summary,
+  Curriculum
   // para importart la conexión { conn } = require('./db.js');
 };

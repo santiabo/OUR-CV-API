@@ -8,10 +8,10 @@ server.post("/:id", async (req, res, next) => {
 
   try {
     const { description } = req.body;
-    const userId = req.params.id;
+    const curriculumId = req.params.id;
     const result = await Summary.create({
       description,
-      userId
+      curriculumId
     });
     res.status(201).json(result);
   } catch (error) {
@@ -22,15 +22,15 @@ server.post("/:id", async (req, res, next) => {
 //----------------Update summary
 server.put('/:id', async (req, res) => {
   try {
-    const userId = req.params.id;
+    const curriculumId = req.params.id;
     const { description } = req.body;
     await Summary.update(
       {
        description
       },
-      { where: { userId } }
+      { where: { curriculumId } }
     );
-    const summary = await Summary.findAll({ where: { userId } });
+    const summary = await Summary.findAll({ where: { curriculumId } });
     res.status(201).json(summary);
   }
   catch (e) {

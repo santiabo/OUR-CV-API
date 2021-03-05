@@ -1,5 +1,5 @@
 const server = require('express').Router();
-const { User } = require('../db.js');
+const { User, Education, Experience, Passion, Skill, Summary, Curriculum } = require('../db.js');
 
 
 //-------------Create user
@@ -19,9 +19,12 @@ server.get('/:id', async (req, res, next) => {
     const { id } = req.params;
     const result = await User.findByPk(id,
       {
-        include: {
-          all: true
-        }
+        include: [{
+          model: Curriculum,
+          include: [{
+            all: true
+          }]
+        }]
       })
       ;
     if (result) return res.json(result);
@@ -35,10 +38,11 @@ server.get('/:id', async (req, res, next) => {
 server.put('/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const { email, mobile, city, name } = req.body;
+    const { email, mobile, city, name, title } = req.body;
     await User.update(
       {
         email,
+        title,
         mobile,
         city,
         name
@@ -47,6 +51,25 @@ server.put('/:id', async (req, res) => {
     );
     const user = await User.findByPk(id);
     res.status(201).json(user);
+  }
+  catch (e) {
+    res.status(400).json({ MjsError: 'something went wrong :(' });
+  };
+});
+
+server.put('/avatar/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { avatar } = req.body;
+    console.log("AVATAR > > >", avatar)
+    await User.update(
+      {
+        avatar
+      },
+      { where: { id } }
+    );
+    const user = await User.findByPk(id);
+    res.status(200).json(user);
   }
   catch (e) {
     res.status(400).json({ MjsError: 'something went wrong :(' });

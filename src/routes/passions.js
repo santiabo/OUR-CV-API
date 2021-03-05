@@ -7,11 +7,11 @@ server.post("/:id", async (req, res, next) => {
 
   try {
     const { area, description } = req.body;
-    const userId = req.params.id;
+    const curriculumId = req.params.id;
     const result = await Passion.create({
       area,
       description,
-      userId
+      curriculumId
     });
     res.status(201).json(result);
   } catch (error) {

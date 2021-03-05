@@ -7,12 +7,12 @@ server.post("/:id", async (req, res, next) => {
 
   try {
     const { title, place, date } = req.body;
-    const userId = req.params.id;
+    const curriculumId = req.params.id;
     const result = await Education.create({
       title,
       place,
       date,
-      userId
+      curriculumId
     });
     res.status(201).json(result);
   } catch (error) {
