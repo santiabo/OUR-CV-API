@@ -9,7 +9,7 @@ let sequelize =
   process.env.NODE_ENV === "production"
     ? new Sequelize({
       database: DB_NAME,
-      dialect: "postgres",
+      dialect: "mysql", //mySQL ???
       host: DB_HOST,
       port: 5432,
       username: DB_USER,
@@ -37,27 +37,19 @@ const basename = path.basename(__filename);
 
 const modelDefiners = [];
 
-// Leemos todos los archivos de la carpeta Models, los requerimos y agregamos al arreglo modelDefiners
 fs.readdirSync(path.join(__dirname, './models'))
   .filter((file) => (file.indexOf('.') !== 0) && (file !== basename) && (file.slice(-3) === '.js'))
   .forEach((file) => {
     modelDefiners.push(require(path.join(__dirname, '/models', file)));
   });
 
-// Injectamos la conexion (sequelize) a todos los modelos
 modelDefiners.forEach(model => model(sequelize));
-// Capitalizamos los nombres de los modelos ie: product => Product
+
 let entries = Object.entries(sequelize.models);
 let capsEntries = entries.map((entry) => [entry[0][0].toUpperCase() + entry[0].slice(1), entry[1]]);
 sequelize.models = Object.fromEntries(capsEntries);
 
 const { User, Education, Experience, Passion, Skill, Summary, Curriculum } = sequelize.models;
-// En sequelize.models están todos los modelos importados como propiedades
-// Para relacionarlos hacemos un destructuring
-/* const { User } = sequelize.models; */
-
-// Aca vendrian las relaciones
-// Product.hasMany(Reviews);
 
 User.hasMany(Curriculum);
 Curriculum.belongsTo(User);
@@ -77,12 +69,8 @@ Skill.belongsTo(Curriculum);
 Curriculum.hasOne(Summary);
 Summary.belongsTo(Curriculum);
 
-//Con esta relacion se crea la tabla intermedia contactLists
-
-
-
 module.exports = {
-  ...sequelize.models, // para poder importar los modelos así: const { Product, User } = require('./db.js');
+  ...sequelize.models,
   conn: sequelize,
   User,
   Education,
@@ -91,5 +79,4 @@ module.exports = {
   Skill,
   Summary,
   Curriculum
-  // para importart la conexión { conn } = require('./db.js');
 };

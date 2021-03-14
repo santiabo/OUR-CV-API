@@ -1,10 +1,7 @@
 const { DataTypes } = require('sequelize');
 
-
-module.exports = (sequelize) => {
- 
+module.exports = (sequelize) => { 
   const Experience = sequelize.define("experience",{
-
     position: {
       type: DataTypes.STRING, 
     },
@@ -12,7 +9,7 @@ module.exports = (sequelize) => {
       type: DataTypes.STRING,  
     },  
     date: {
-      type: DataTypes.STRING, 
+      type: DataTypes.STRING,  //Change to date, depending on datepicker.
     },
     info: {
       type: DataTypes.TEXT,

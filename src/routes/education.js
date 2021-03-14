@@ -1,7 +1,6 @@
 const server = require('express').Router();
 const { Education } = require('../db.js');
 
-
 //-------------Create Education
 server.post("/:id", async (req, res, next) => {
 
@@ -47,12 +46,14 @@ server.put('/:id', async (req, res) => {
 server.delete('/:id', async (req, res) => {
   try{
     const { id } = req.params;
+    const education = await Education.findByPk(id);
  await Education.destroy({where: {id}});
- res.status(201).json({"Status": "200"});
+ res.status(201).json(education);
   }
   catch(e) {
     res.status(400).json({"message": `"${e}"`});
   }
 })
+
 
 module.exports = server;

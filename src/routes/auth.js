@@ -1,52 +1,189 @@
 const server = require("express").Router();
-const { User } = require("../db.js");
+const { User, Curriculum, Experience, Education, Passion, Skill, Summary } = require("../db.js");
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
+const { OAuth2Client } = require('google-auth-library')
+const client = new OAuth2Client(process.env.CLIENT_ID)
 
-server.get("/me", async (req, res, next) => {
-  try {
-    if (req.user) {
-      const { id } = req.user;
-      const result = await User.findByPk(id);
-      res.json(result);
-    } else res.sendStatus(401);
-  } catch (error) {
-    next(error);
-  }
-});
+server.post("/api/v1/auth/google", async (req, res) => {
+  const { token } = req.body
+  const ticket = await client.verifyIdToken({
+    idToken: token,
+    audience: process.env.CLIENT_ID
+  });
 
-server.post("/register", async function (req, res, next) {
-  try {
-    const user = await User.create(req.body);
-    const { id, givenName, familyName, email, photoURL, isAdmin } = user;
-    return res.send(
-      jwt.sign(
-        {
-          id,
-          givenName,
-          familyName,
-          email,
-          photoURL,
-          isAdmin,
-        },
-        "secreto"
-      )
-    );
-  } catch (error) {
-    res.sendStatus(500).send(error);
-  }
-});
+  const { name, email, picture } = ticket.payload;
 
-server.post("/login", function (req, res, next) {
-  passport.authenticate("local", function (err, user) {
-  //  console.log("USER", user)
-  const userData = {token: jwt.sign(user, "secreto"),
-                    user}
-    if (err) return next(err);
-    else if (!user) return res.sendStatus(401);
-    else return res.send(userData);
+  const isUser = await User.findOne({ where: { email } })
 
-  })(req, res, next);
+  if (!isUser) {
+    let user = await User.create({
+      name,
+      email,
+      avatar: picture,
+    })
+
+    const curriculum = await Curriculum.create({
+      language: "english",
+      userId: user.id
+    });
+
+    await Experience.create({
+      position: "Your position",
+      place: "Company Name",
+      date: "When ",
+      info: "Detailed information about your job",
+      curriculumId: curriculum.id
+    });
+
+    await Experience.create({
+      position: "Your position",
+      place: "Company Name",
+      date: "When ",
+      info: "Detailed information about your job",
+      curriculumId: curriculum.id
+    });
+
+    await Education.create({
+      title: "Obtained title",
+      place: "Institution name",
+      date: "When",
+      curriculumId: curriculum.id
+    });
+
+    await Education.create({
+      title: "Obtained title",
+      place: "Institution name",
+      date: "When",
+      curriculumId: curriculum.id
+    });
+
+    await Passion.create({
+      area: "Area",
+      description: "Things you like to do besides work",
+      curriculumId: curriculum.id
+    });
+
+    await Passion.create({
+      area: "Area",
+      description: "Things you like to do besides work",
+      curriculumId: curriculum.id
+    });
+
+    await Skill.create({
+      area: "Area",
+      tools: "List all the tools you use in you work",
+      curriculumId: curriculum.id
+    });
+    await Skill.create({
+      area: "Area",
+      tools: "List all the tools you use in you work",
+      curriculumId: curriculum.id
+    });
+    await Skill.create({
+      area: "Area",
+      tools: "List all the tools you use in you work",
+      curriculumId: curriculum.id
+    });
+    await Skill.create({
+      area: "Area",
+      tools: "List all the tools you use in you work",
+      curriculumId: curriculum.id
+    });
+
+    await Summary.create({
+      description: "A short description about you ",
+      curriculumId: curriculum.id
+    });
+
+    const curriculum2 = await Curriculum.create({
+      language: "spanish",
+      userId: user.id
+    });
+
+    await Experience.create({
+      position: "Posisión",
+      place: "Nombre de la compañía",
+      date: "Fecha ",
+      info: "Información detallada del trabajo realizado",
+      curriculumId: curriculum2.id
+    });
+
+    await Experience.create({
+      position: "Posisión",
+      place: "Nombre de la compañía",
+      date: "Cuando ",
+      info: "Información detallada del trabajo realizado",
+      curriculumId: curriculum2.id
+    });
+
+    await Education.create({
+      title: "Titulo Obtenido",
+      place: "Nombre de la institución",
+      date: "Fecha",
+      curriculumId: curriculum2.id
+    });
+
+    await Education.create({
+      title: "Titulo Obtenido",
+      place: "Nombre de la institución",
+      date: "Fecha",
+      curriculumId: curriculum2.id
+    });
+
+    await Passion.create({
+      area: "Area",
+      description: "Cosas que te gusta hacer fuera del trabajo",
+      curriculumId: curriculum2.id
+    });
+
+    await Passion.create({
+      area: "Area",
+      description: "Cosas que te gusta hacer fuera del trabajo",
+      curriculumId: curriculum2.id
+    });
+
+    await Skill.create({
+      area: "Area",
+      tools: "Lista las herramientas que usas en el trabajo",
+      curriculumId: curriculum2.id
+    });
+    await Skill.create({
+      area: "Area",
+      tools: "Lista las herramientas que usas en el trabajo",
+      curriculumId: curriculum2.id
+    });
+    await Skill.create({
+      area: "Area",
+      tools: "Lista las herramientas que usas en el trabajo",
+      curriculumId: curriculum2.id
+    });
+    await Skill.create({
+      area: "Area",
+      tools: "Lista las herramientas que usas en el trabajo",
+      curriculumId: curriculum2.id
+    });
+
+    await Summary.create({
+      description: "Una breve desctipción personal",
+      curriculumId: curriculum2.id
+    });
+
+    res.status(201)
+    console.log("DB user created", user)
+    res.json(user)
+  } else {
+    await User.update(
+      {
+        name,
+        avatar: picture
+      },
+      { where: { email: email } }
+    )
+    const updatedUser = await User.findOne({ where: { email: email } })
+    res.status(201)
+    res.json(updatedUser)
+  };
 });
 
 module.exports = server;

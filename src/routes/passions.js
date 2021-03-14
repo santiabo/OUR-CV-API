@@ -1,10 +1,8 @@
 const server = require('express').Router();
 const { Passion } = require('../db.js');
 
-
 //-------------Create Eexperience
-server.post("/:id", async (req, res, next) => {
-
+server.post("/:id", async (req, res) => {
   try {
     const { area, description } = req.body;
     const curriculumId = req.params.id;
@@ -14,8 +12,8 @@ server.post("/:id", async (req, res, next) => {
       curriculumId
     });
     res.status(201).json(result);
-  } catch (error) {
-    next(error);
+  } catch (e) {
+    res.status(400).json({"message": `"${e}"`});
   }
 });
 
@@ -35,10 +33,9 @@ server.put('/:id', async (req, res) => {
     res.status(201).json(passion);
   }
   catch (e) {
-    res.status(400).json(e);
+    res.status(400).json({"message": `"${e}"`});
   };
 });
-
 
 //---------------Delete passion
 server.delete('/:id', async (req, res) => {

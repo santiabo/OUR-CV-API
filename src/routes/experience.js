@@ -1,10 +1,8 @@
 const server = require('express').Router();
 const { Experience } = require('../db.js');
 
-
 //-------------Create Eexperience
-server.post("/:id", async (req, res, next) => {
-
+server.post("/:id", async (req, res) => {
   try {
     const { position, place, date, info } = req.body;
     const curriculumId = req.params.id;
@@ -16,8 +14,8 @@ server.post("/:id", async (req, res, next) => {
       curriculumId
     });
     res.status(201).json(result);
-  } catch (error) {
-    next(error);
+  } catch (e) {
+    res.status(400).json({"message": `"${e}"`});
   }
 });
 
@@ -40,7 +38,7 @@ server.put('/:id', async (req, res) => {
     res.status(201).json(experience);
   }
   catch (e) {
-    res.status(400).json({ MjsError: 'something went wrong :(' });
+    res.status(400).json({"message": `"${e}"`});
   };
 });
 
@@ -48,8 +46,9 @@ server.put('/:id', async (req, res) => {
 server.delete('/:id', async (req, res) => {
   try{
     const { id } = req.params;
+ const experience = await Experience.findByPk(id);
  await Experience.destroy({where: {id}});
- res.status(201).json({"Status": "200"});
+ res.status(201).json(experience);
   }
   catch(e) {
     res.status(400).json({"message": `"${e}"`});

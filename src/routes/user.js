@@ -1,10 +1,8 @@
 const server = require('express').Router();
-const { User, Education, Experience, Passion, Skill, Summary, Curriculum } = require('../db.js');
-
+const { User, Curriculum } = require('../db.js');
 
 //-------------Create user
 server.post("/", async (req, res, next) => {
-
   try {
     const result = await User.create(req.body);
     res.status(201).json(result);
@@ -30,7 +28,7 @@ server.get('/:id', async (req, res, next) => {
     if (result) return res.json(result);
     return res.status(404).json({ Error: 'User not found' });
   } catch (error) {
-    return next(error);
+    res.status(400).json({"message": `"${e}"`});
   }
 });
 
@@ -53,15 +51,15 @@ server.put('/:id', async (req, res) => {
     res.status(201).json(user);
   }
   catch (e) {
-    res.status(400).json({ MjsError: 'something went wrong :(' });
+    res.status(400).json({"message": `"${e}"`});
   };
 });
 
+//-----------------Update avatar
 server.put('/avatar/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const { avatar } = req.body;
-    console.log("AVATAR > > >", avatar)
     await User.update(
       {
         avatar
@@ -72,7 +70,7 @@ server.put('/avatar/:id', async (req, res) => {
     res.status(200).json(user);
   }
   catch (e) {
-    res.status(400).json({ MjsError: 'something went wrong :(' });
+    res.status(400).json({"message": `"${e}"`});
   };
 });
 

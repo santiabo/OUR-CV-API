@@ -1,10 +1,8 @@
 const server = require('express').Router();
 const { Curriculum } = require('../db.js');
 
-
 //-------------Create Curriculum
 server.post("/:id", async (req, res, next) => {
-
   try {
     const { language } = req.body;
     const userId = req.params.id;
@@ -34,10 +32,9 @@ server.put('/:id', async (req, res) => {
   }
   catch (e) {
     console.log(e);
-    res.status(400).json({ MjsError: 'something went wrong :(' });
+    res.status(400).json({ "message": `"${e}"`});
   };
 });
-
 
 //---------------Delete education
 server.delete('/:id', async (req, res) => {
@@ -50,8 +47,5 @@ server.delete('/:id', async (req, res) => {
     res.status(400).json({ "message": `"${e}"` });
   }
 })
-
-
-
 
 module.exports = server;

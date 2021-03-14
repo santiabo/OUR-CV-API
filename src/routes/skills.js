@@ -1,10 +1,8 @@
 const server = require('express').Router();
 const { Skill } = require('../db.js');
 
-
 //-------------Create Eexperience
-server.post("/:id", async (req, res, next) => {
-
+server.post("/:id", async (req, res) => {
   try {
     const { area, tools } = req.body;
     const curriculumId = req.params.id;
@@ -14,8 +12,8 @@ server.post("/:id", async (req, res, next) => {
       curriculumId
     });
     res.status(201).json(result);
-  } catch (error) {
-    next(error);
+  } catch (e) {
+    res.status(400).json({"message": `"${e}"`});
   }
 });
 
@@ -35,17 +33,18 @@ server.put('/:id', async (req, res) => {
     res.status(201).json(skill);
   }
   catch (e) {
-    res.status(400).json(e);
+    res.status(400).json({"message": `"${e}"`});
   };
 });
 
-
 //---------------Delete skill
 server.delete('/:id', async (req, res) => {
+
   try{
     const { id } = req.params;
+    const skill = await Skill.findByPk(id);
  await Skill.destroy({where: {id}});
- res.status(201).json({"Status": "200"});
+ res.status(201).json(skill);
   }
   catch(e) {
     res.status(400).json({"message": `"${e}"`});
