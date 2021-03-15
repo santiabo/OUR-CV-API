@@ -23,8 +23,7 @@ const sequelize =
         ssl: {
           require: true,
           rejectUnauthorized: false,
-        },
-        keepAlive: false,
+        }
       },
       ssl: true,
     })
