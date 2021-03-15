@@ -2,7 +2,7 @@ const server = require('./src/app.js');
 const { conn, User, Experience, Education, Skill, Passion, Summary, Curriculum } = require('./src/db');
 
 conn.sync({ force: true }).then(() => {
-  server.listen(3001, async () => {  //process.env.PORT
+  server.listen(process.env.PORT, async () => {  //process.env.PORT
     console.log(` listening at port 3001`); // eslint-disable-line no-console
 
  /*   await User.create({
