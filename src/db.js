@@ -12,7 +12,7 @@ const sequelize =
       dialect: "mysql", //mySQL ???
       host: DB_HOST,
       port: 5432,
-      username: DB_USER,
+      user: DB_USER,
       password: DB_PASSWORD,
       pool: {
         max: 3,
