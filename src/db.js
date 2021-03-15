@@ -24,7 +24,7 @@ const sequelize =
           require: true,
           rejectUnauthorized: false,
         },
-        keepAlive: true,
+        keepAlive: false,
       },
       ssl: true,
     })
