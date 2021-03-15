@@ -5,7 +5,7 @@ conn.sync({ force: true }).then(() => {
   server.listen(3001, async () => {  //process.env.PORT
     console.log(` listening at port 3001`); // eslint-disable-line no-console
 
-    await User.create({
+ /*   await User.create({
       "email": "santiabo@gmail.com",
       "password": "Xja97v",
       "name": "Santiago Aguirre",    
@@ -190,7 +190,7 @@ conn.sync({ force: true }).then(() => {
   await Summary.create({
     "curriculumId": 2,
     description: `Dessarrollador web full stack, proactivo, con avanzado nivel de inglés. Curioso por naturaleza.`
-  });
+  });*/
 
 });
 });
