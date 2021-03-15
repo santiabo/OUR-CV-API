@@ -5,11 +5,11 @@ const path = require('path');
 const {
   DB_USER, DB_PASSWORD, DB_HOST, DB_NAME
 } = process.env;
-const sequelize =
+let sequelize =
   process.env.NODE_ENV === "production"
     ? new Sequelize({
       database: DB_NAME,
-      dialect: "mysql", //mySQL ???
+      dialect: "postgres", //mySQL ???
       host: DB_HOST,
       port: 5432,
       user: DB_USER,
@@ -23,7 +23,8 @@ const sequelize =
         ssl: {
           require: true,
           rejectUnauthorized: false,
-        }
+        },
+        keepAlive: true,
       },
       ssl: true,
     })
